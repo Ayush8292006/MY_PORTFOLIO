@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -8,6 +9,38 @@ import Projects from './components/Projects';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import WelcomeScreen from './components/WelcomeScreen';
+import AllProjects from './components/AllProjects';
+
+// Main Layout Component
+const MainLayout = () => {
+  const location = useLocation();
+  const isProjectsPage = location.pathname === '/projects';
+
+  return (
+    <>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={
+          <>
+            <Hero />
+            <About />
+            <Education />
+            <Skills />
+            <Projects />
+            <Contact />
+            <Footer />
+          </>
+        } />
+        <Route path="/projects" element={
+          <>
+            <AllProjects />
+            <Footer />
+          </>
+        } />
+      </Routes>
+    </>
+  );
+};
 
 const App = () => {
   const [showWelcome, setShowWelcome] = useState(true);
@@ -30,16 +63,9 @@ const App = () => {
       {showWelcome ? (
         <WelcomeScreen />
       ) : (
-        <>
-          <Navbar />
-          <Hero />
-          <About />
-          <Education />
-          <Skills />
-          <Projects />
-          <Contact />
-          <Footer />
-        </>
+        <Router>
+          <MainLayout />
+        </Router>
       )}
     </div>
   );

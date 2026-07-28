@@ -18,14 +18,14 @@ const Skills = () => {
       title: 'Frontend Development',
       icon: '🎨',
       color: 'from-purple-400 to-pink-400',
-      skills: ['HTML5', 'CSS3', 'React.js', 'Next.js', 'Tailwind CSS', 'Responsive Design']
+      skills: ['HTML5', 'CSS3', 'React.js', 'Next.js', 'Tailwind CSS', 'Responsive Design', 'Framer Motion']
     },
     {
       id: 3,
       title: 'Backend Development',
       icon: '⚙️',
       color: 'from-green-400 to-emerald-400',
-      skills: ['Node.js', 'Express.js', 'REST APIs', 'JWT Auth', 'OAuth', 'WebSockets']
+      skills: ['Node.js', 'Express.js', 'REST APIs', 'JWT Auth', 'OAuth', 'WebSockets', 'Socket.io']
     },
     {
       id: 4,
@@ -61,7 +61,7 @@ const Skills = () => {
       title: 'Tools & Platforms',
       icon: '🛠️',
       color: 'from-indigo-400 to-purple-400',
-      skills: ['Git', 'GitHub', 'VS Code', 'Postman', 'MongoDB Compass', 'npm', 'Vercel', 'Render']
+      skills: ['Git', 'GitHub', 'VS Code', 'Postman', 'MongoDB Compass', 'npm', 'Vercel', 'Render', 'Cloudinary', 'Razorpay', 'Firebase', 'Geoapify']
     }
   ];
 
@@ -82,6 +82,26 @@ const Skills = () => {
     return () => observer.disconnect();
   }, []);
 
+  // ✅ All Skills - Complete List (Updated)
+  const allSkills = [
+    // Languages
+    'C++', 'JavaScript', 'TypeScript', 'Python', 'Java',
+    // Frontend
+    'HTML5', 'CSS3', 'React.js', 'Next.js', 'Tailwind CSS', 'Framer Motion', 'Responsive Design',
+    // Backend
+    'Node.js', 'Express.js', 'REST APIs', 'JWT', 'OAuth', 'WebSockets', 'Socket.io',
+    // Database
+    'MongoDB', 'MySQL', 'PostgreSQL', 'Database Design', 'Query Optimization',
+    // AI/ML
+    'Generative AI', 'LLMs', 'Prompt Engineering', 'LangChain', 'RAG', 'Graph RAG',
+    'AI Agents', 'Google Gemini API', 'Vector Embeddings', 'Semantic Search',
+    'Pinecone', 'Neo4j', 'Deep Learning', 'Neural Networks',
+    // Tools
+    'Git', 'GitHub', 'VS Code', 'Postman', 'MongoDB Compass', 'npm',
+    'Vercel', 'Render', 'Cloudinary', 'Razorpay', 'Firebase', 'Geoapify',
+    'Leaflet.js', 'Recharts', 'Redux Toolkit'
+  ];
+
   return (
     <section 
       id="skills" 
@@ -90,10 +110,10 @@ const Skills = () => {
     >
       {/* Background Decorations */}
       <div className="absolute inset-0 opacity-30 pointer-events-none">
-        <div className="absolute top-20 right-20 w-80 h-80 bg-blue-500/8 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 left-20 w-96 h-96 bg-purple-500/8 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse delay-2000"></div>
-        <div className="absolute top-40 right-40 w-60 h-60 bg-pink-500/5 rounded-full blur-3xl animate-pulse delay-1500"></div>
+        <div className="absolute top-20 right-20 w-80 h-80 bg-blue-500/8 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 left-20 w-96 h-96 bg-purple-500/8 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse delay-2000" />
+        <div className="absolute top-40 right-40 w-60 h-60 bg-pink-500/5 rounded-full blur-3xl animate-pulse delay-1500" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -184,33 +204,7 @@ const Skills = () => {
           </div>
 
           <div className="flex flex-wrap justify-center gap-2.5 max-w-4xl mx-auto">
-            {[
-              // Languages
-              'C++', 'JavaScript', 'TypeScript', 'Python', 'Java',
-              // Frontend
-              'HTML5', 'CSS3', 'React.js', 'Next.js', 'Tailwind CSS',
-              // Backend
-              'Node.js', 'Express.js', 'REST APIs', 'JWT', 'OAuth', 'WebSockets',
-              // Database
-              'MongoDB', 'MySQL', 'PostgreSQL', 'Database Design',
-              // AI/ML
-              'Generative AI',
-              'LLMs',
-              'Prompt Engineering',
-              'LangChain',
-              'RAG',
-              'Graph RAG',
-              'AI Agents',
-              'Google Gemini API',
-              'Vector Embeddings',
-              'Semantic Search',
-              'Pinecone',
-              'Neo4j',
-              'Deep Learning',
-              'Neural Networks',
-              // Tools
-              'Git', 'GitHub', 'VS Code', 'Postman', 'MongoDB Compass', 'npm', 'Vercel', 'Render'
-            ].map((skill, index) => (
+            {allSkills.map((skill, index) => (
               <span
                 key={index}
                 className={`px-4 py-2 rounded-xl bg-[#1a2236]/30 text-xs font-medium text-[#8aaac8] border border-[#1a2236]/20 hover:border-[#4a7aaa]/40 hover:text-white hover:bg-[#1a2236]/60 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#4a7aaa]/10 cursor-default ${

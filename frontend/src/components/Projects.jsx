@@ -1,20 +1,46 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // Import local images
+import CravelyImg from '../assets/cravely.jpg';
 import MovieMindImg from '../assets/MovieMind.jpg';
 import CinebookImg from '../assets/cinebook.avif';
 import AssistantImg from '../assets/Assistant.webp';
-import TaskImg from '../assets/task.jpeg';
+import TaskFlowImg from '../assets/task.jpeg';
 
 const Projects = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
+  const [showAll, setShowAll] = useState(false);
   const sectionRef = useRef(null);
+  const navigate = useNavigate();
 
   const projects = [
     {
       id: 1,
-      title: 'MovieMind — GraphRAG Movie Engine',
+      title: 'Cravely — Food Delivery Platform',
+      icon: '🍕',
+      image: CravelyImg,
+      tech: ['React', 'Node.js', 'MongoDB', 'Socket.io', 'Razorpay', 'Firebase', 'Cloudinary', 'Geoapify'],
+      description: [
+        '🏪 4 User Roles — Customer, Restaurant Owner, Delivery Boy, Super Admin with separate dashboards',
+        '📍 Real-time Order Tracking — Live location updates using Socket.io and React Leaflet maps',
+        '💳 Payment Integration — Razorpay for online payments and Cash on Delivery option',
+        '🔐 Authentication — Google OAuth (Firebase) and JWT-based secure authentication',
+        '📧 Email Notifications — Order confirmation, delivery OTP, and status updates via Nodemailer',
+        '🗺️ Location Services — Geoapify for auto city detection and address management',
+        '📸 Image Storage — Cloudinary for shop and food item images',
+        '🔄 Real-time Updates — Socket.io for instant order status changes and delivery assignments'
+      ],
+      live: 'https://cravely-food-delivery-website.vercel.app/',
+      github: 'https://github.com/Ayush8292006/cravely-food-delivery',
+      color: 'from-red-500 to-orange-500',
+      glow: 'shadow-red-500/20',
+      featured: true
+    },
+    {
+      id: 2,
+      title: 'MovieMind – GraphRAG Movie Recommendation Engine',
       icon: '🎬',
       image: MovieMindImg,
       tech: ['React', 'Node.js', 'Neo4j', 'Pinecone', 'Gemini AI', 'Web Speech API'],
@@ -29,10 +55,11 @@ const Projects = () => {
       live: 'https://moviemind-xi.vercel.app/',
       github: 'https://github.com/Ayush8292006/MovieMind---GraphRAG',
       color: 'from-purple-500 to-pink-500',
-      glow: 'shadow-purple-500/20'
+      glow: 'shadow-purple-500/20',
+      featured: true
     },
     {
-      id: 2,
+      id: 3,
       title: 'CineBook — Movie Ticket Booking Platform',
       icon: '🎬',
       image: CinebookImg,
@@ -46,10 +73,11 @@ const Projects = () => {
       live: 'https://cinebook-omega.vercel.app/',
       github: 'https://github.com/Ayush8292006/CineBook-TicketBooking',
       color: 'from-blue-500 to-cyan-500',
-      glow: 'shadow-blue-500/20'
+      glow: 'shadow-blue-500/20',
+      featured: true
     },
     {
-      id: 3,
+      id: 4,
       title: 'AI Virtual Assistant',
       icon: '🤖',
       image: AssistantImg,
@@ -62,25 +90,34 @@ const Projects = () => {
       live: 'https://virtual-chatbot-sandy.vercel.app',
       github: 'https://github.com/Ayush8292006/Virtual-Chatbot',
       color: 'from-green-500 to-emerald-500',
-      glow: 'shadow-emerald-500/20'
+      glow: 'shadow-emerald-500/20',
+      featured: true
     },
     {
-      id: 4,
+      id: 5,
       title: 'ProjectFlow — Task Management App',
       icon: '📋',
-      image: TaskImg,
-      tech: ['React', 'TypeScript', 'Tailwind', 'Zustand'],
+      image: TaskFlowImg,
+      tech: ['React', 'TypeScript', 'Tailwind CSS', 'Zustand', 'Framer Motion'],
       description: [
-        'Built task management system with Kanban board, timeline view, and drag-and-drop support.',
-        'Optimized performance using virtual scrolling to handle 500+ tasks efficiently.',
-        'Implemented global state management using Zustand for seamless data flow.'
+        '📊 Kanban Board — Drag-and-drop task management with columns (To Do, In Progress, Done)',
+        '📅 Timeline View — Visualize tasks on interactive timeline with date filters',
+        '🎯 Drag & Drop — Smooth drag-and-drop functionality using Framer Motion',
+        '💾 State Management — Zustand for global state with persistence',
+        '⚡ Performance — Virtual scrolling for handling 500+ tasks efficiently',
+        '🎨 Responsive Design — Fully responsive with dark/light mode support'
       ],
       live: 'https://kanban-timeline-website.vercel.app/',
       github: 'https://github.com/Ayush8292006/kanban-timeline-website',
       color: 'from-orange-500 to-yellow-500',
-      glow: 'shadow-orange-500/20'
+      glow: 'shadow-orange-500/20',
+      featured: false
     }
   ];
+
+  // Filter featured projects for homepage
+  const featuredProjects = projects.filter(p => p.featured !== false);
+  const displayProjects = showAll ? projects : featuredProjects;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -108,6 +145,10 @@ const Projects = () => {
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
   }, []);
+
+  const handleViewAll = () => {
+    navigate('/projects');
+  };
 
   return (
     <section 
@@ -179,7 +220,7 @@ const Projects = () => {
 
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-          {projects.map((project, index) => (
+          {displayProjects.map((project, index) => (
             <div
               key={project.id}
               className={`group cursor-pointer transition-all duration-700 transform ${
@@ -227,7 +268,7 @@ const Projects = () => {
                   </div>
 
                   {/* Gen AI Badge */}
-                  {project.id === 1 && (
+                  {project.id === 2 && (
                     <div className="absolute top-4 left-20 px-3 py-1 rounded-full bg-purple-500/20 border border-purple-500/30 backdrop-blur-sm">
                       <span className="text-[10px] text-purple-400 font-medium flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse"></span>
@@ -236,9 +277,19 @@ const Projects = () => {
                     </div>
                   )}
 
-                  {/* API Limit Badge */}
+                  {/* Food Delivery Badge */}
                   {project.id === 1 && (
-                    <div className="absolute bottom-16 left-4 px-3 py-1 rounded-full bg-yellow-500/20 border border-yellow-500/30 backdrop-blur-sm">
+                    <div className="absolute top-4 left-20 px-3 py-1 rounded-full bg-orange-500/20 border border-orange-500/30 backdrop-blur-sm">
+                      <span className="text-[10px] text-orange-400 font-medium flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 bg-orange-400 rounded-full animate-pulse"></span>
+                        Full Stack
+                      </span>
+                    </div>
+                  )}
+
+                  {/* API Limit Badge */}
+                  {project.id === 2 && (
+                    <div className="absolute bottom-16 left-4 px-3 py-1 my-3 rounded-full bg-yellow-500/20 border border-yellow-500/30 backdrop-blur-sm">
                       <span className="text-[9px] text-yellow-400 font-medium flex items-center gap-1.5">
                         ⚠️ Free API • 3-4 queries/day
                       </span>
@@ -279,10 +330,38 @@ const Projects = () => {
           ))}
         </div>
 
+        {/* View All Projects Button */}
+        <div className={`mt-12 text-center transition-all duration-700 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`} style={{ transitionDelay: '800ms' }}>
+          <button
+            onClick={handleViewAll}
+            className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-[#1a2a4a] to-[#2a4a7a] text-white font-medium transition-all duration-500 hover:shadow-2xl hover:shadow-[#4a7aaa]/30 hover:-translate-y-1 overflow-hidden"
+          >
+            {/* Button Glow */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#4a7aaa]/20 to-[#6aaadd]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            
+            {/* Button Content */}
+            <span className="relative z-10 text-lg">🚀</span>
+            <span className="relative z-10">View All Projects</span>
+            <span className="relative z-10 group-hover:translate-x-2 transition-transform duration-300">→</span>
+            
+            {/* Border Animation */}
+            <div className="absolute inset-0 rounded-full border-2 border-[#4a7aaa]/30 group-hover:border-[#4a7aaa] transition-all duration-500"></div>
+            
+            {/* Pulse Ring */}
+            <div className="absolute -inset-2 rounded-full border border-[#4a7aaa]/20 animate-ping opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          </button>
+          
+          <p className="mt-3 text-xs text-[#6a8aaa] tracking-wider">
+            {projects.length} projects available • Click to explore all
+          </p>
+        </div>
+
         {/* Bottom Decoration */}
         <div className={`mt-16 text-center transition-all duration-700 ${
           isVisible ? 'opacity-100' : 'opacity-0'
-        }`} style={{ transitionDelay: '600ms' }}>
+        }`} style={{ transitionDelay: '900ms' }}>
           <div className="inline-flex items-center gap-4 px-8 py-4 rounded-full bg-gradient-to-r from-[#1a2236]/30 to-[#1a2a4a]/30 border border-[#2a3a5a] backdrop-blur-sm hover:border-[#4a7aaa]/40 transition-all duration-500 hover:shadow-2xl hover:shadow-[#1a2236]/30 group">
             <span className="text-[#4a7aaa] animate-pulse text-lg group-hover:scale-125 transition-transform duration-300">✦</span>
             <span className="text-xs text-[#8aaac8] font-medium tracking-wide">Each project reflects my passion for building impactful solutions</span>
@@ -330,7 +409,7 @@ const Projects = () => {
                     Live Project
                   </span>
                 </div>
-                {selectedProject.id === 1 && (
+                {selectedProject.id === 2 && (
                   <>
                     <div className="absolute top-4 left-32 px-4 py-1.5 rounded-full bg-purple-500/20 border border-purple-500/30 backdrop-blur-sm">
                       <span className="text-[10px] text-purple-400 font-medium flex items-center gap-1.5">
@@ -344,6 +423,14 @@ const Projects = () => {
                       </span>
                     </div>
                   </>
+                )}
+                {selectedProject.id === 1 && (
+                  <div className="absolute top-4 left-32 px-4 py-1.5 rounded-full bg-orange-500/20 border border-orange-500/30 backdrop-blur-sm">
+                    <span className="text-[10px] text-orange-400 font-medium flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 bg-orange-400 rounded-full animate-pulse"></span>
+                      Full Stack
+                    </span>
+                  </div>
                 )}
               </div>
 
@@ -406,6 +493,51 @@ const Projects = () => {
           </div>
         </div>
       )}
+
+      <style jsx>{`
+        @keyframes float-slow {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        .animate-float-slow {
+          animation: float-slow 8s ease-in-out infinite;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+          from { opacity: 0; transform: scale(0.9) translateY(20px); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
+        }
+        .animate-scaleIn {
+          animation: scaleIn 0.4s ease-out;
+        }
+        @keyframes gradient {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        .animate-gradient {
+          background-size: 200% 200%;
+          animation: gradient 3s ease infinite;
+        }
+        .overflow-y-auto::-webkit-scrollbar {
+          width: 6px;
+        }
+        .overflow-y-auto::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .overflow-y-auto::-webkit-scrollbar-thumb {
+          background: #2a3a5a;
+          border-radius: 10px;
+        }
+        .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+          background: #4a7aaa;
+        }
+      `}</style>
     </section>
   );
 };

@@ -54,7 +54,7 @@ const Icons = {
       <line x1="12" y1="15" x2="12" y2="3"/>
     </svg>
   ),
-  // ✅ Tech Icons
+  // Tech Icons
   React: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
       <path d="M12 2C7.58 2 4 4.69 4 8c0 2.21 1.49 4.07 3.62 5.1C7.22 14.42 7 15.2 7 16c0 3.31 2.24 6 5 6s5-2.69 5-6c0-.8-.22-1.58-.62-2.9C18.51 12.07 20 10.21 20 8c0-3.31-3.58-6-8-6z"/>
@@ -82,6 +82,21 @@ const Icons = {
       <path d="M12 2a8 8 0 0 0-8 8c0 3.1 1.8 5.8 4.5 7.2L10 18v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-2l1.5-.8C18.2 15.8 20 13.1 20 10a8 8 0 0 0-8-8z"/>
       <path d="M12 2v20"/>
     </svg>
+  ),
+  // New Icons
+  Graduation: () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+      <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+      <path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/>
+    </svg>
+  ),
+  Users: () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+      <circle cx="9" cy="7" r="4"/>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    </svg>
   )
 };
 
@@ -94,13 +109,12 @@ const Hero = () => {
   const [showDownloadPopup, setShowDownloadPopup] = useState(false);
   const [showCopyPopup, setShowCopyPopup] = useState(false);
 
-  // ✅ Updated Roles (Recruiter-friendly)
+  // ✅ Updated Roles - Software Developer First
   const roles = [
-    "Full Stack Developer",
     "Software Developer",
-    "Generative AI Developer",
-    "MERN Stack Developer"
-    
+    "Full Stack Developer",
+    "MERN Stack Developer",
+    "Generative AI Developer"
   ];
 
   useEffect(() => {
@@ -156,7 +170,7 @@ const Hero = () => {
       id="home"
       className="min-h-screen relative overflow-hidden bg-[#0a0e1a] flex items-center"
     >
-      {/* ✅ Floating Particles (Welcome page se inspired) */}
+      {/* Floating Particles */}
       <div className="absolute inset-0 pointer-events-none">
         {[...Array(30)].map((_, i) => (
           <div
@@ -172,15 +186,10 @@ const Hero = () => {
         ))}
       </div>
 
-      {/* ✅ Gradient Orbs (Softened) */}
+      {/* Gradient Orbs */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
       <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-purple-500/8 rounded-full blur-3xl animate-pulse delay-1000" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-3xl animate-pulse delay-2000" />
-
-      {/* Floating Elements */}
-      <div className="absolute top-32 right-32 text-[#4a7aaa]/5 text-6xl animate-float-slow pointer-events-none font-light">✦</div>
-      <div className="absolute bottom-40 left-24 text-[#6aaadd]/5 text-5xl animate-float-medium pointer-events-none font-light">◇</div>
-      <div className="absolute top-1/3 right-20 text-[#8aaac8]/4 text-4xl animate-float-fast pointer-events-none font-light">○</div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 w-full">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
@@ -188,16 +197,16 @@ const Hero = () => {
           {/* ===== LEFT - CONTENT ===== */}
           <div className="space-y-5 md:space-y-6 order-2 lg:order-1">
             
-            {/* ✅ Badge - Updated */}
+            {/* ✅ Badge - Software Developer Focus */}
             <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#1a2236]/50 border border-[#2a3a5a]/20 backdrop-blur-sm">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
               </span>
-              <span className="text-[10px] sm:text-[11px] text-[#8aaac8] font-medium tracking-[0.15em] uppercase">Available for Internship</span>
+              <span className="text-[10px] sm:text-[11px] text-[#8aaac8] font-medium tracking-[0.15em] uppercase">Looking for Software Developer Roles</span>
             </div>
 
-            {/* ✅ Heading - With Surname */}
+            {/* ✅ Heading */}
             <div>
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-[1.1] tracking-tight">
                 Hi, I'm
@@ -208,7 +217,7 @@ const Hero = () => {
               </h1>
             </div>
 
-            {/* Animated Role */}
+            {/* Animated Role - Software Developer First */}
             <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-[#1a2236]/20 border border-[#2a3a5a]/10 backdrop-blur-sm w-fit">
               <span className="text-base sm:text-lg md:text-xl font-medium text-[#8aaac8]">
                 {typedText}
@@ -216,39 +225,45 @@ const Hero = () => {
               </span>
             </div>
 
-            {/* ✅ Description - Updated with max-w-xl */}
+            {/* ✅ Description - Software Developer Focused */}
             <div className="space-y-2 max-w-xl">
               <p className="text-sm sm:text-base text-[#8aaac8]/80 leading-relaxed">
-                <span className="text-white font-medium">Full Stack &amp; Generative AI Developer</span> building scalable web applications with <span className="text-[#6aaadd] font-medium">React</span>, 
+                <span className="text-white font-medium">Software Developer</span> with expertise in 
+                <span className="text-[#6aaadd] font-medium"> Full Stack</span> &amp; 
+                <span className="text-[#6aaadd] font-medium"> Generative AI</span>. 
+                Building scalable web applications with <span className="text-[#6aaadd] font-medium">React</span>, 
                 <span className="text-[#6aaadd] font-medium"> Node.js</span>, 
-                <span className="text-[#6aaadd] font-medium"> Express.js</span>, 
+                <span className="text-[#6aaadd] font-medium"> Express</span>, 
                 <span className="text-[#6aaadd] font-medium"> MongoDB</span> &amp; 
                 <span className="text-[#6aaadd] font-medium"> MySQL</span>.
               </p>
               <p className="text-sm sm:text-base text-[#8aaac8]/70 leading-relaxed">
-                ⚡ 250+ DSA Problems Solved • LangChain • RAG • Clean &amp; Scalable Code
+                ⚡ <span className="text-white font-medium">250+</span> DSA Problems Solved • 
+                <span className="text-white font-medium"> LangChain</span> • 
+                <span className="text-white font-medium"> RAG</span> • 
+                <span className="text-white font-medium"> Clean Code</span>
               </p>
             </div>
 
-            {/* ✅ Tech Icons */}
+            {/* Tech Icons */}
             <div className="flex items-center gap-4 text-[#6a8aaa] text-sm">
-              <span className="flex items-center gap-1.5"><Icons.React /> React</span>
-              <span className="flex items-center gap-1.5"><Icons.Node /> Node</span>
-              <span className="flex items-center gap-1.5"><Icons.Mongo /> Mongo</span>
-              <span className="flex items-center gap-1.5"><Icons.AI /> AI</span>
+              <span className="flex items-center gap-1.5 hover:text-[#6aaadd] transition-colors duration-300"><Icons.React /> React</span>
+              <span className="flex items-center gap-1.5 hover:text-[#6aaadd] transition-colors duration-300"><Icons.Node /> Node</span>
+              <span className="flex items-center gap-1.5 hover:text-[#6aaadd] transition-colors duration-300"><Icons.Mongo /> Mongo</span>
+              <span className="flex items-center gap-1.5 hover:text-[#6aaadd] transition-colors duration-300"><Icons.AI /> AI</span>
             </div>
 
-            {/* ✅ Statistics Cards */}
+            {/* ✅ Statistics Cards - Updated */}
             <div className="flex flex-wrap gap-4 pt-1">
-              <div className="bg-[#1a2236]/40 backdrop-blur-sm border border-[#2a3a5a]/20 rounded-xl px-4 py-2">
+              <div className="group bg-[#1a2236]/40 backdrop-blur-sm border border-[#2a3a5a]/20 rounded-xl px-4 py-2 hover:border-[#4a7aaa]/30 hover:shadow-lg hover:shadow-[#4a7aaa]/10 transition-all duration-300 hover:-translate-y-1">
                 <span className="text-lg font-bold text-white">250+</span>
                 <span className="block text-[9px] text-[#6a8aaa] uppercase tracking-wider">DSA Problems</span>
               </div>
-              <div className="bg-[#1a2236]/40 backdrop-blur-sm border border-[#2a3a5a]/20 rounded-xl px-4 py-2">
-                <span className="text-lg font-bold text-white">4+</span>
+              <div className="group bg-[#1a2236]/40 backdrop-blur-sm border border-[#2a3a5a]/20 rounded-xl px-4 py-2 hover:border-[#4a7aaa]/30 hover:shadow-lg hover:shadow-[#4a7aaa]/10 transition-all duration-300 hover:-translate-y-1">
+                <span className="text-lg font-bold text-white">5+</span>
                 <span className="block text-[9px] text-[#6a8aaa] uppercase tracking-wider">Projects</span>
               </div>
-              <div className="bg-[#1a2236]/40 backdrop-blur-sm border border-[#2a3a5a]/20 rounded-xl px-4 py-2">
+              <div className="group bg-[#1a2236]/40 backdrop-blur-sm border border-[#2a3a5a]/20 rounded-xl px-4 py-2 hover:border-[#4a7aaa]/30 hover:shadow-lg hover:shadow-[#4a7aaa]/10 transition-all duration-300 hover:-translate-y-1">
                 <span className="text-lg font-bold text-white">3rd</span>
                 <span className="block text-[9px] text-[#6a8aaa] uppercase tracking-wider">Year CSE (AI)</span>
               </div>
@@ -282,7 +297,6 @@ const Hero = () => {
                 <span className="absolute inset-0 bg-[#2a3a5a]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl" />
               </button>
 
-              {/* ✅ View Projects Button */}
               <a
                 href="#projects"
                 className="group relative px-6 sm:px-8 py-3 rounded-xl bg-[#1a2236]/30 border border-[#2a3a5a]/20 text-[#8aaac8] font-medium text-sm transition-all duration-300 hover:border-[#4a7aaa]/40 hover:text-white hover:shadow-xl hover:shadow-[#1a2236]/20 hover:-translate-y-1 flex items-center gap-2"
@@ -294,7 +308,7 @@ const Hero = () => {
               </a>
             </div>
 
-            {/* Social Links - Updated with scale on hover */}
+            {/* Social Links */}
             <div className="flex items-center gap-4 pt-1">
               <span className="text-[9px] sm:text-[10px] text-[#6a8aaa] tracking-[0.2em] uppercase">Connect</span>
               <div className="w-8 sm:w-10 h-px bg-[#2a3a5a]/20" />
@@ -332,7 +346,7 @@ const Hero = () => {
           <div className="relative flex justify-center order-1 lg:order-2">
             <div className="relative w-full max-w-[280px] sm:max-w-[320px] md:max-w-sm">
               
-              {/* ✅ Soft Light Glow - Reduced intensity */}
+              {/* Soft Light Glow */}
               <div className="absolute -inset-10 sm:-inset-12 bg-gradient-to-r from-blue-500/10 via-purple-500/8 to-cyan-500/5 rounded-full blur-3xl animate-pulse" />
               <div className="absolute -inset-6 sm:-inset-8 bg-gradient-to-r from-[#4a7aaa]/15 to-[#6aaadd]/8 rounded-full blur-2xl animate-pulse delay-700" />
               <div className="absolute -inset-4 sm:-inset-5 bg-gradient-to-tr from-blue-400/8 to-purple-400/5 rounded-full blur-3xl animate-pulse delay-1500" />
@@ -341,7 +355,7 @@ const Hero = () => {
               <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-[#1a2236]/20 border border-[#2a3a5a]/10 bg-[#0d1424]">
                 <img 
                   src={AyushImage}
-                  alt="Ayush Kumar - Full Stack & Generative AI Developer"
+                  alt="Ayush Kumar - Software Developer"
                   className={`w-full h-auto object-cover transition-all duration-1000 ${
                     imageLoaded ? 'scale-100 opacity-100' : 'scale-105 opacity-0'
                   }`}
@@ -354,14 +368,6 @@ const Hero = () => {
                 
                 {/* Subtle Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-tr from-[#0a0e1a]/20 via-transparent to-transparent rounded-2xl" />
-                
-                {/* Floating Icons */}
-                <div className="absolute top-4 right-4 text-[#4a7aaa]/10 animate-float-slow">
-                  <Icons.Code />
-                </div>
-                <div className="absolute bottom-4 left-4 text-[#6aaadd]/10 animate-float-medium delay-500">
-                  <Icons.Zap />
-                </div>
               </div>
 
               {/* ✅ Status Indicator - Updated */}
@@ -371,14 +377,14 @@ const Hero = () => {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                     <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
                   </span>
-                  <span className="text-[8px] sm:text-[10px] text-white/80 font-medium tracking-wide">Open to Opportunities</span>
+                  <span className="text-[8px] sm:text-[10px] text-white/80 font-medium tracking-wide">Seeking Software Developer Roles</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* ✅ Scroll Indicator - Updated */}
+        {/* Scroll Indicator */}
         <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 sm:gap-2 animate-bounce">
           <span className="text-[7px] sm:text-[8px] text-[#6a8aaa] tracking-[0.3em] uppercase">Scroll</span>
           <Icons.ArrowDown />
