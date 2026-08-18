@@ -1,21 +1,82 @@
-import React, { useState } from 'react';
-import emailjs from '@emailjs/browser';
+import React, { useState, useEffect, useRef } from "react";
+import emailjs from "@emailjs/browser";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
   });
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-  const [popupType, setPopupType] = useState('');
+  const [popupType, setPopupType] = useState("");
   const [showCopyPopup, setShowCopyPopup] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef(null);
 
   const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
   const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
   const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+  const contactInfo = [
+    {
+      label: "EMAIL",
+      value: "aksrivastav0825@gmail.com",
+      icon: (
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+          <polyline points="22,6 12,13 2,6" />
+        </svg>
+      ),
+      action: "copy",
+    },
+    {
+      label: "LINKEDIN",
+      value: "ayush-kumar-35499a32b",
+      icon: (
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+        </svg>
+      ),
+      href: "https://www.linkedin.com/in/ayush-kumar-35499a32b",
+    },
+    {
+      label: "GITHUB",
+      value: "Ayush8292006",
+      icon: (
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.15 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.62.24 2.85.12 3.15.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+        </svg>
+      ),
+      href: "https://github.com/Ayush8292006",
+    },
+    {
+      label: "LEETCODE",
+      value: "ayush825",
+      icon: <span className="text-xs font-bold">LC</span>,
+      href: "https://leetcode.com/u/ayush825/",
+    },
+    {
+      label: "LOCATION",
+      value: "Greater Noida, Uttar Pradesh, India",
+      icon: (
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+          <circle cx="12" cy="10" r="3" />
+        </svg>
+      ),
+    },
+  ];
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => entry.isIntersecting && setIsVisible(true),
+      { threshold: 0.1 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -26,30 +87,28 @@ const Contact = () => {
     setLoading(true);
 
     try {
-      const templateParams = {
-        from_name: formData.name,
-        from_email: formData.email,
-        subject: formData.subject,
-        message: formData.message,
-        to_email: 'aksrivastav0825@gmail.com',
-      };
-
       const result = await emailjs.send(
         SERVICE_ID,
         TEMPLATE_ID,
-        templateParams,
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          to_email: "aksrivastav0825@gmail.com",
+        },
         PUBLIC_KEY
       );
 
-      if (result.text === 'OK') {
-        setPopupType('success');
+      if (result.text === "OK") {
+        setPopupType("success");
         setShowPopup(true);
-        setFormData({ name: '', email: '', subject: '', message: '' });
+        setFormData({ name: "", email: "", subject: "", message: "" });
         setTimeout(() => setShowPopup(false), 4000);
       }
     } catch (error) {
-      console.error('❌ EmailJS Error:', error);
-      setPopupType('error');
+      console.error("EmailJS Error:", error);
+      setPopupType("error");
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 4000);
     } finally {
@@ -58,306 +117,204 @@ const Contact = () => {
   };
 
   const copyEmail = () => {
-    navigator.clipboard.writeText('aksrivastav0825@gmail.com');
+    navigator.clipboard.writeText("aksrivastav0825@gmail.com");
     setShowCopyPopup(true);
     setTimeout(() => setShowCopyPopup(false), 2000);
   };
 
   return (
-    <section id="contact" className="min-h-screen py-20 bg-[#0a0e1a] relative overflow-hidden flex items-center">
-      
-      <div className="absolute inset-0 opacity-30 pointer-events-none">
-        <div className="absolute top-20 left-20 w-96 h-96 bg-blue-500/8 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/8 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse delay-2000"></div>
-        <div className="absolute top-40 right-40 w-60 h-60 bg-pink-500/5 rounded-full blur-3xl animate-pulse delay-1500"></div>
-      </div>
-
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(15)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-[#4a7aaa]/15 rounded-full animate-float-slow"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${5 + Math.random() * 10}s`
-            }}
-          />
-        ))}
-      </div>
-
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-[#1a2236] to-[#1a2a4a] border border-[#2a3a5a] mb-4 shadow-xl shadow-[#1a2236]/30 hover:shadow-[#4a7aaa]/20 transition-all duration-500">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4a7aaa] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#4a7aaa]"></span>
-            </span>
-            <span className="text-[10px] font-semibold text-[#4a7aaa] tracking-[0.2em] uppercase">
-              Let's Connect
-            </span>
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4a7aaa] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#4a7aaa]"></span>
-            </span>
-          </div>
-          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-            Contact <span className="bg-gradient-to-r from-[#4a7aaa] via-[#6aaadd] to-[#8aaac8] bg-clip-text text-transparent">Me</span>
-          </h2>
-          <div className="flex items-center justify-center gap-4">
-            <div className="w-20 h-0.5 bg-gradient-to-r from-transparent to-[#4a7aaa]"></div>
-            <div className="relative">
-              <div className="w-3 h-3 rounded-full bg-[#4a7aaa] shadow-lg shadow-[#4a7aaa]/50 animate-pulse"></div>
-              <div className="absolute -inset-2 rounded-full bg-[#4a7aaa]/20 animate-ping"></div>
-            </div>
-            <div className="w-20 h-0.5 bg-gradient-to-l from-transparent to-[#4a7aaa]"></div>
-          </div>
-          <p className="text-[#8aaac8]/50 text-sm mt-4 max-w-2xl mx-auto">
-            Have a question or want to collaborate? Let's talk!
+    <section
+      id="contact"
+      ref={sectionRef}
+      className="min-h-screen py-24 bg-black relative overflow-hidden"
+    >
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        {/* Header */}
+        <div
+          className={`mb-14 transition-all duration-1000 ${
+            isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+          }`}
+        >
+          <p className="text-[#f59e0b] text-[11px] font-mono tracking-[0.25em] uppercase mb-3">
+            [ CONTACT ]
           </p>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+  Let's Build <span className="text-[#f59e0b]">Something Real</span>
+</h2>
+<p className="text-neutral-500 text-sm max-w-lg leading-relaxed">
+  I'm always open to exciting collaborations, innovative projects, or simply a 
+  thoughtful conversation about technology. Whether you have a groundbreaking 
+  idea, a challenging problem to solve, or just want to connect — my inbox is 
+  ready. I personally respond to every message within 24 hours.
+</p>
         </div>
 
-        <div className="grid md:grid-cols-5 gap-6 max-w-5xl mx-auto">
-          
-          <div className="md:col-span-2 space-y-4">
-            <div className="bg-gradient-to-br from-[#0d1424] to-[#0a0e1a] rounded-2xl p-6 border border-[#1a2236]/50 hover:border-[#4a7aaa]/30 transition-all duration-500 hover:shadow-xl hover:shadow-[#1a2236]/30 group">
-              <h3 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
-                <span className="text-2xl group-hover:scale-110 transition-transform">💬</span> 
-                Let's Talk
-              </h3>
-              <p className="text-[#8aaac8]/60 text-sm leading-relaxed">
-                I'm always open to new opportunities, collaborations, or just a friendly chat about tech and innovation.
-              </p>
-              
-              <div className="mt-5 space-y-3">
-                <button
-                  onClick={copyEmail}
-                  className="w-full flex items-center gap-3 p-3 rounded-xl bg-[#1a2236]/40 border border-[#1a2236]/30 hover:border-[#4a7aaa]/40 transition-all duration-300 group hover:bg-[#1a2236]/60 cursor-pointer"
-                >
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-[#1a2a4a] to-[#2a4a7a] flex items-center justify-center text-lg group-hover:scale-110 transition-transform shadow-lg shadow-[#1a2a4a]/30">
-                    📧
-                  </div>
-                  <div className="text-left">
-                    <p className="text-[10px] text-[#6a8aaa] uppercase tracking-wider">Email (Click to Copy)</p>
-                    <p className="text-sm text-[#8aaac8] font-medium">aksrivastav0825@gmail.com</p>
-                  </div>
-                </button>
-                
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-[#1a2236]/40 border border-[#1a2236]/30 hover:border-[#4a7aaa]/40 transition-all duration-300 group hover:bg-[#1a2236]/60">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-[#1a2a4a] to-[#2a4a7a] flex items-center justify-center text-lg group-hover:scale-110 transition-transform shadow-lg shadow-[#1a2a4a]/30">
-                    📍
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-[#6a8aaa] uppercase tracking-wider">Location</p>
-                    <p className="text-sm text-[#8aaac8] font-medium">India</p>
-                  </div>
+        {/* Main Grid */}
+        <div
+          className={`grid lg:grid-cols-2 gap-10 lg:gap-14 transition-all duration-1000 delay-150 ${
+            isVisible ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
+          }`}
+        >
+          {/* LEFT - Contact Info */}
+          <div className="space-y-3">
+            {contactInfo.map((item) => (
+              <div
+                key={item.label}
+                onClick={() => {
+                  if (item.action === "copy") copyEmail();
+                  else if (item.href) window.open(item.href, "_blank");
+                }}
+                className="flex items-center gap-4 p-4 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a] hover:border-[#f59e0b]/30 cursor-pointer transition-all duration-300 group hover:-translate-y-0.5"
+              >
+                <div className="w-10 h-10 rounded-lg bg-[#111] border border-[#222] flex items-center justify-center text-[#f59e0b] group-hover:border-[#f59e0b]/40 transition-colors">
+                  {item.icon}
                 </div>
-                
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-[#1a2236]/40 border border-[#1a2236]/30 hover:border-[#4a7aaa]/40 transition-all duration-300 group hover:bg-[#1a2236]/60">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-[#1a2a4a] to-[#2a4a7a] flex items-center justify-center text-lg group-hover:scale-110 transition-transform shadow-lg shadow-[#1a2a4a]/30">
-                    ⏰
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-[#6a8aaa] uppercase tracking-wider">Response Time</p>
-                    <p className="text-sm text-[#8aaac8] font-medium">Within 24 hours</p>
-                  </div>
+                <div>
+                  <p className="text-[10px] text-neutral-600 uppercase tracking-wider mb-0.5">
+                    {item.label}
+                  </p>
+                  <p className="text-sm text-neutral-300 group-hover:text-white transition-colors">
+                    {item.value}
+                  </p>
                 </div>
               </div>
-            </div>
-
-            <div className="bg-gradient-to-br from-[#0d1424] to-[#0a0e1a] rounded-2xl p-6 border border-[#1a2236]/50 hover:border-[#4a7aaa]/30 transition-all duration-500 hover:shadow-xl hover:shadow-[#1a2236]/30">
-              <h4 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-                <span className="text-lg">🔗</span> Connect with me
-              </h4>
-              <div className="grid grid-cols-2 gap-2">
-                <a
-                  href="https://www.linkedin.com/in/ayush-kumar-35499a32b"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 p-2.5 rounded-xl bg-[#1a2236]/40 border border-[#1a2236]/30 hover:border-[#0a66c2]/50 transition-all duration-300 hover:bg-[#1a2a4a] group"
-                >
-                  <span className="text-xl group-hover:scale-110 transition-transform text-[#0a66c2]">💼</span>
-                  <span className="text-xs text-[#8aaac8] group-hover:text-white transition-colors">LinkedIn</span>
-                </a>
-
-                <a
-                  href="https://github.com/Ayush8292006"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 p-2.5 rounded-xl bg-[#1a2236]/40 border border-[#1a2236]/30 hover:border-[#6aaadd]/50 transition-all duration-300 hover:bg-[#1a2a4a] group"
-                >
-                  <span className="text-xl group-hover:scale-110 transition-transform text-[#6aaadd]">🐙</span>
-                  <span className="text-xs text-[#8aaac8] group-hover:text-white transition-colors">GitHub</span>
-                </a>
-
-                <button
-                  onClick={copyEmail}
-                  className="flex items-center gap-2 p-2.5 rounded-xl bg-[#1a2236]/40 border border-[#1a2236]/30 hover:border-[#ea4335]/50 transition-all duration-300 hover:bg-[#1a2a4a] group cursor-pointer"
-                >
-                  <span className="text-xl group-hover:scale-110 transition-transform text-[#ea4335]">📧</span>
-                  <span className="text-xs text-[#8aaac8] group-hover:text-white transition-colors">Copy Email</span>
-                </button>
-              </div>
-            </div>
+            ))}
           </div>
 
-          <div className="md:col-span-3">
-            <form onSubmit={handleSubmit} className="bg-gradient-to-br from-[#0d1424] to-[#0a0e1a] rounded-2xl p-6 border border-[#1a2236]/50 hover:border-[#4a7aaa]/30 transition-all duration-500 hover:shadow-xl hover:shadow-[#1a2236]/30">
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-[10px] font-medium text-[#8aaac8] uppercase tracking-wider mb-1.5">
-                    👤 Full Name <span className="text-[#4a7aaa]">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    placeholder="Enter your full name..."
-                    className="w-full px-4 py-3 rounded-xl bg-[#1a2236]/60 border border-[#1a2236]/50 text-white placeholder-[#6a8aaa]/60 focus:outline-none focus:border-[#4a7aaa] transition-all duration-300 focus:shadow-lg focus:shadow-[#4a7aaa]/10"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-medium text-[#8aaac8] uppercase tracking-wider mb-1.5">
-                    📧 Email Address <span className="text-[#4a7aaa]">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    placeholder="Enter your email address..."
-                    className="w-full px-4 py-3 rounded-xl bg-[#1a2236]/60 border border-[#1a2236]/50 text-white placeholder-[#6a8aaa]/60 focus:outline-none focus:border-[#4a7aaa] transition-all duration-300 focus:shadow-lg focus:shadow-[#4a7aaa]/10"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-medium text-[#8aaac8] uppercase tracking-wider mb-1.5">
-                    📝 Subject <span className="text-[#4a7aaa]">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    required
-                    placeholder="What's this about?"
-                    className="w-full px-4 py-3 rounded-xl bg-[#1a2236]/60 border border-[#1a2236]/50 text-white placeholder-[#6a8aaa]/60 focus:outline-none focus:border-[#4a7aaa] transition-all duration-300 focus:shadow-lg focus:shadow-[#4a7aaa]/10"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-medium text-[#8aaac8] uppercase tracking-wider mb-1.5">
-                    💬 Message <span className="text-[#4a7aaa]">*</span>
-                  </label>
-                  <textarea
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    rows="4"
-                    placeholder="Write your message here..."
-                    className="w-full px-4 py-3 rounded-xl bg-[#1a2236]/60 border border-[#1a2236]/50 text-white placeholder-[#6a8aaa]/60 focus:outline-none focus:border-[#4a7aaa] transition-all duration-300 resize-none focus:shadow-lg focus:shadow-[#4a7aaa]/10"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="group relative w-full px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#1a2a4a] to-[#2a4a7a] text-white font-medium text-sm transition-all duration-300 hover:shadow-2xl hover:shadow-[#1a2a4a]/50 hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
-                >
-                  <span className="relative z-10 flex items-center justify-center gap-2">
-                    {loading ? (
-                      <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                    ) : (
-                      <>
-                        <span>🚀</span>
-                        Send Message
-                        <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
-                      </>
-                    )}
-                  </span>
-                  <span className="absolute inset-0 bg-gradient-to-r from-[#2a4a7a] to-[#4a7aaa] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
-                </button>
+          {/* RIGHT - Form */}
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-[10px] text-neutral-600 uppercase tracking-wider mb-1.5">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  placeholder="Your name"
+                  className="w-full px-4 py-3 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a] text-white placeholder-neutral-600 text-sm focus:outline-none focus:border-[#f59e0b]/50 transition-colors"
+                />
               </div>
-            </form>
+              <div>
+                <label className="block text-[10px] text-neutral-600 uppercase tracking-wider mb-1.5">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  placeholder="you@email.com"
+                  className="w-full px-4 py-3 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a] text-white placeholder-neutral-600 text-sm focus:outline-none focus:border-[#f59e0b]/50 transition-colors"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-[10px] text-neutral-600 uppercase tracking-wider mb-1.5">
+                Subject
+              </label>
+              <input
+                type="text"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                required
+                placeholder="What's it about?"
+                className="w-full px-4 py-3 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a] text-white placeholder-neutral-600 text-sm focus:outline-none focus:border-[#f59e0b]/50 transition-colors"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[10px] text-neutral-600 uppercase tracking-wider mb-1.5">
+                Message
+              </label>
+              <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                required
+                rows="5"
+                placeholder="Your message..."
+                className="w-full px-4 py-3 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a] text-white placeholder-neutral-600 text-sm focus:outline-none focus:border-[#f59e0b]/50 transition-colors resize-none"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-[#f59e0b] text-black font-semibold text-sm hover:bg-[#fbbf24] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#f59e0b]/25 disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  Sending...
+                </span>
+              ) : (
+                <>
+                  <span>✈</span>
+                  SEND MESSAGE
+                </>
+              )}
+            </button>
+          </form>
+        </div>
+
+        {/* Bottom Tagline */}
+        <div
+          className={`mt-20 pt-10 border-t border-[#1a1a1a] text-center transition-all duration-1000 delay-300 ${
+            isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+          }`}
+        >
+          <p className="text-neutral-500 text-sm">
+            Good engineers ship. Let's{" "}
+            <span className="text-[#f59e0b]">build something that does</span>.
+          </p>
+          <div className="mt-4 flex justify-center">
+            <span className="w-8 h-8 rounded-full border border-[#f59e0b]/50 flex items-center justify-center">
+              <span className="w-3 h-3 rounded-full bg-[#f59e0b]" />
+            </span>
           </div>
         </div>
       </div>
 
-      {showPopup && popupType === 'success' && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0a0e1a]/80 backdrop-blur-md animate-fadeIn">
-          <div className="relative bg-gradient-to-br from-[#0d1424] to-[#0a0e1a] rounded-3xl max-w-md w-full p-8 border border-green-500/30 shadow-2xl shadow-green-500/20 animate-scaleIn overflow-hidden">
-            <div className="absolute -inset-1 bg-gradient-to-r from-green-500/20 to-emerald-500/20 blur-2xl animate-pulse"></div>
-            <div className="relative flex flex-col items-center text-center">
-              <div className="relative">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-r from-green-500/20 to-emerald-500/20 flex items-center justify-center animate-bounce-slow">
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-r from-green-500/30 to-emerald-500/30 flex items-center justify-center">
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center shadow-2xl shadow-green-500/50">
-                      <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-                <div className="absolute -top-2 -right-2 w-4 h-4 bg-green-400 rounded-full animate-ping"></div>
-                <div className="absolute -bottom-2 -left-2 w-3 h-3 bg-emerald-400 rounded-full animate-ping delay-300"></div>
-                <div className="absolute top-1/2 -right-4 w-2 h-2 bg-green-300 rounded-full animate-ping delay-700"></div>
-              </div>
-
-              <h3 className="text-2xl font-bold text-white mt-6 mb-2">
-                Thank You! 🙏
-              </h3>
-              <p className="text-[#8aaac8] text-sm leading-relaxed">
-                Your message has been sent successfully!<br />
-                <span className="text-green-400 font-medium">I'll get back to you within 24 hours.</span>
-              </p>
-              <div className="mt-4 w-16 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full animate-pulse"></div>
+      {/* Success / Error Popup */}
+      {showPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-2xl p-8 max-w-sm w-full text-center">
+            <div
+              className={`w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-4 ${
+                popupType === "success"
+                  ? "bg-emerald-500/15 text-emerald-400"
+                  : "bg-red-500/15 text-red-400"
+              }`}
+            >
+              {popupType === "success" ? "✓" : "✕"}
             </div>
+            <h3 className="text-white font-semibold text-lg mb-2">
+              {popupType === "success" ? "Message Sent!" : "Something went wrong"}
+            </h3>
+            <p className="text-neutral-500 text-sm">
+              {popupType === "success"
+                ? "I'll get back to you within 24 hours."
+                : "Please try again later."}
+            </p>
           </div>
         </div>
       )}
 
-      {showPopup && popupType === 'error' && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0a0e1a]/80 backdrop-blur-md animate-fadeIn">
-          <div className="relative bg-gradient-to-br from-[#0d1424] to-[#0a0e1a] rounded-3xl max-w-md w-full p-8 border border-red-500/30 shadow-2xl shadow-red-500/20 animate-scaleIn overflow-hidden">
-            <div className="absolute -inset-1 bg-gradient-to-r from-red-500/20 to-pink-500/20 blur-2xl animate-pulse"></div>
-            <div className="relative flex flex-col items-center text-center">
-              <div className="w-24 h-24 rounded-full bg-gradient-to-r from-red-500/20 to-pink-500/20 flex items-center justify-center animate-bounce-slow">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-r from-red-500/30 to-pink-500/30 flex items-center justify-center">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-r from-red-500 to-pink-500 flex items-center justify-center shadow-2xl shadow-red-500/50">
-                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              <h3 className="text-2xl font-bold text-white mt-6 mb-2">
-                Oops! 😅
-              </h3>
-              <p className="text-[#8aaac8] text-sm leading-relaxed">
-                Something went wrong.<br />
-                <span className="text-red-400 font-medium">Please try again later.</span>
-              </p>
-              <div className="mt-4 w-16 h-1 bg-gradient-to-r from-red-500 to-pink-500 rounded-full animate-pulse"></div>
-            </div>
-          </div>
-        </div>
-      )}
-
+      {/* Copy Popup */}
       {showCopyPopup && (
-        <div className="fixed bottom-8 right-8 z-50 bg-blue-500/20 backdrop-blur-xl border border-blue-500/30 rounded-xl px-5 py-3 shadow-2xl animate-slideIn">
-          <p className="text-blue-300 text-sm font-medium">📧 Email copied to clipboard!</p>
+        <div className="fixed bottom-8 right-6 z-50 bg-[#f59e0b]/15 border border-[#f59e0b]/30 rounded-xl px-5 py-3 backdrop-blur-xl">
+          <p className="text-[#f59e0b] text-sm font-medium">Email copied!</p>
         </div>
       )}
     </section>

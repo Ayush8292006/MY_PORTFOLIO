@@ -4,15 +4,39 @@
 @tailwind utilities;
 
 @layer base {
+  /* ✅ ORANGE THEME CSS VARIABLES */
+  :root {
+    /* Primary Orange */
+    --orange-primary: #f59e0b;
+    --orange-hover: #f59e0b;
+    --orange-darker: #d97706;
+    --orange-lighter: #fbbf24;
+    --orange-lightest: #fcd34d;
+    --orange-darkest: #b45309;
+    
+    /* Supporting Colors */
+    --bg-dark: #0a0e1a;
+    --text-white: #ffffff;
+    --border-color: #2a3a5a;
+    --text-muted: #6a8aaa;
+    --bg-card: #1a2236;
+    
+    /* Orange Glow */
+    --glow-orange: rgba(245, 158, 11, 0.3);
+    --glow-orange-strong: rgba(245, 158, 11, 0.5);
+    --glow-orange-subtle: rgba(245, 158, 11, 0.1);
+  }
+
   * {
     scroll-behavior: smooth;
   }
   
-  body {
+   body {
     @apply bg-[#0a0e1a] text-white;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    /* ✅ Update with your chosen font */
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
-  
+
   ::-webkit-scrollbar {
     width: 8px;
   }
@@ -26,7 +50,7 @@
   }
   
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-[#4a7aaa];
+    @apply bg-[#f59e0b];
   }
 }
 
@@ -68,6 +92,17 @@
     }
   }
   
+  @keyframes glow-pulse {
+    0%, 100% {
+      opacity: 0.5;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+  }
+  
   .animate-float-slow {
     animation: float 12s ease-in-out infinite;
   }
@@ -78,5 +113,110 @@
   
   .animate-pulse-slow {
     animation: pulse-slow 4s ease-in-out infinite;
+  }
+  
+  .animate-glow-pulse {
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+
+  /* ✅ ORANGE THEME UTILITY CLASSES */
+  .bg-orange-primary {
+    background-color: var(--orange-primary);
+  }
+  
+  .bg-orange-darker {
+    background-color: var(--orange-darker);
+  }
+  
+  .bg-orange-lighter {
+    background-color: var(--orange-lighter);
+  }
+  
+  .text-orange-primary {
+    color: var(--orange-primary);
+  }
+  
+  .text-orange-darker {
+    color: var(--orange-darker);
+  }
+  
+  .text-orange-lighter {
+    color: var(--orange-lighter);
+  }
+  
+  .border-orange-primary {
+    border-color: var(--orange-primary);
+  }
+  
+  .hover\:text-orange-primary:hover {
+    color: var(--orange-primary);
+  }
+  
+  .hover\:border-orange-primary:hover {
+    border-color: var(--orange-primary);
+  }
+  
+  .hover\:bg-orange-primary:hover {
+    background-color: var(--orange-primary);
+  }
+  
+  .shadow-orange {
+    box-shadow: 0 0 30px var(--glow-orange);
+  }
+  
+  .shadow-orange-strong {
+    box-shadow: 0 0 50px var(--glow-orange-strong);
+  }
+  
+  .shadow-orange-subtle {
+    box-shadow: 0 0 20px var(--glow-orange-subtle);
+  }
+
+  /* ✅ GRADIENT CLASSES */
+  .gradient-orange {
+    background: linear-gradient(135deg, var(--orange-primary), var(--orange-darker));
+  }
+  
+  .gradient-orange-light {
+    background: linear-gradient(135deg, var(--orange-lighter), var(--orange-primary));
+  }
+  
+  .gradient-orange-dark {
+    background: linear-gradient(135deg, var(--orange-darker), var(--orange-darkest));
+  }
+  
+  .gradient-orange-glow {
+    background: radial-gradient(circle, var(--glow-orange), transparent 70%);
+  }
+  
+  .gradient-orange-glow-strong {
+    background: radial-gradient(circle, var(--glow-orange-strong), transparent 70%);
+  }
+
+  /* ✅ TEXT GRADIENTS */
+  .text-gradient-orange {
+    background: linear-gradient(135deg, var(--orange-lighter), var(--orange-primary), var(--orange-darker));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .text-gradient-orange-glow {
+    background: linear-gradient(135deg, var(--orange-primary), var(--orange-lighter), var(--orange-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+
+  /* ✅ BORDER GRADIENTS */
+  .border-gradient-orange {
+    border-image: linear-gradient(135deg, var(--orange-primary), var(--orange-darker)) 1;
+  }
+
+  /* 🔥 NEW: VERTICAL TEXT UTILITY FOR SIDEBAR 🔥 */
+  .writing-mode-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
   }
 }

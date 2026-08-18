@@ -1,155 +1,181 @@
-import React, { useEffect, useState, useRef } from 'react';
+
+import React, { useEffect, useState } from "react";
 
 const WelcomeScreen = () => {
+  const [phase, setPhase] = useState("enter"); // enter | type | hold | zoom
   const [textIndex, setTextIndex] = useState(0);
-  const [showSubtext, setShowSubtext] = useState(false);
-  const [navigate, setNavigate] = useState(false);
-  const hasSpoken = useRef(false);
+  const [subIndex, setSubIndex] = useState(0);
+  const [progress, setProgress] = useState(0);
+
   const fullText = "Welcome to Ayush's Portfolio";
-  
-const subTexts = [
-  "✦ Full Stack Developer",
-  "✦ Software Developer",
-  "✦ Generative AI Enthusiast",
-  "✦ AI/ML Enthusiast",
-];
+  const subTexts = [
+    "Software Developer",
+    "Full Stack Developer",
+    "GenAI Enthusiast",
+    "MERN Stack Developer",
+  ];
 
-  const speakFullSentence = () => {
-    if (!('speechSynthesis' in window)) return;
-    if (hasSpoken.current) return;
-    hasSpoken.current = true;
-
-    const utterance = new SpeechSynthesisUtterance("Welcome to Ayush's Portfolio");
-    utterance.rate = 0.9;
-    utterance.pitch = 1;
-    utterance.volume = 1;
-    utterance.lang = 'en-US';
-    
-    utterance.onend = () => {
-      console.log('✅ Speech complete');
-      setTimeout(() => {
-        console.log('⏳ 3 seconds done, navigating...');
-        setNavigate(true);
-      }, 3000); // ✅ 3 seconds
-    };
-
-    utterance.onerror = () => {
-      console.log('❌ Speech error, navigating anyway...');
-      setNavigate(true);
-    };
-
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utterance);
-  };
-
+  // Phase timeline
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTextIndex((prev) => {
-        if (prev < fullText.length) {
-          return prev + 1;
-        } else {
-          clearInterval(interval);
-          setTimeout(() => setShowSubtext(true), 300);
-          return prev;
-        }
-      });
-    }, 60);
-
-    const voiceTimer = setTimeout(() => {
-      speakFullSentence();
-    }, 1500);
-
-    const fallbackTimer = setTimeout(() => {
-      if (!navigate) {
-        console.log('⚠️ Fallback: Navigating after 6 seconds');
-        setNavigate(true);
-      }
-    }, 6000);
-
-    return () => {
-      clearInterval(interval);
-      clearTimeout(voiceTimer);
-      clearTimeout(fallbackTimer);
-      window.speechSynthesis.cancel();
-    };
+    const t1 = setTimeout(() => setPhase("type"), 600);
+    return () => clearTimeout(t1);
   }, []);
 
+  // Typewriter
   useEffect(() => {
-    if (navigate) {
-      const event = new CustomEvent('welcomeComplete');
-      window.dispatchEvent(event);
+    if (phase !== "type") return;
+    if (textIndex >= fullText.length) {
+      setPhase("hold");
+      return;
     }
-  }, [navigate]);
+    const t = setTimeout(() => setTextIndex((p) => p + 1), 45);
+    return () => clearTimeout(t);
+  }, [phase, textIndex]);
 
+  // Subtext cycle during hold
   useEffect(() => {
-    if (!showSubtext) return;
-    let subIndex = 0;
-    const subInterval = setInterval(() => {
-      subIndex = (subIndex + 1) % subTexts.length;
-      const subtextEl = document.getElementById('subtext');
-      if (subtextEl) {
-        subtextEl.textContent = subTexts[subIndex];
-      }
-    }, 1200);
+    if (phase !== "hold" && phase !== "type") return;
+    const t = setInterval(() => {
+      setSubIndex((p) => (p + 1) % subTexts.length);
+    }, 1100);
+    return () => clearInterval(t);
+  }, [phase]);
 
-    return () => clearInterval(subInterval);
-  }, [showSubtext]);
+  // Progress + zoom out to home
+  useEffect(() => {
+    if (phase === "enter") return;
+
+    const start = Date.now();
+    const duration = 3800;
+
+    const tick = () => {
+      const pct = Math.min(100, ((Date.now() - start) / duration) * 100);
+      setProgress(pct);
+      if (pct < 100) {
+        requestAnimationFrame(tick);
+      } else {
+        setPhase("zoom");
+        setTimeout(() => {
+          window.dispatchEvent(new CustomEvent("welcomeComplete"));
+        }, 700);
+      }
+    };
+
+    const delay = setTimeout(() => requestAnimationFrame(tick), 200);
+    return () => clearTimeout(delay);
+  }, [phase === "type"]);
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#0a0e1a] overflow-hidden">
-      
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse delay-1000" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-3xl animate-pulse delay-2000" />
+    <div
+      className={`fixed inset-0 z-[9999] flex items-center justify-center bg-black overflow-hidden transition-all duration-700 ease-in-out
+        ${phase === "zoom" ? "scale-150 opacity-0 blur-md" : "scale-100 opacity-100 blur-0"}
+      `}
+    >
+      {/* Animated rings */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div
+          className={`absolute w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] rounded-full border border-[#f59e0b]/20 transition-all duration-1000
+            ${phase === "enter" ? "scale-50 opacity-0" : "scale-100 opacity-100"}
+          `}
+          style={{ animation: phase !== "enter" ? "spinSlow 18s linear infinite" : "none" }}
+        />
+        <div
+          className={`absolute w-[400px] h-[400px] sm:w-[520px] sm:h-[520px] rounded-full border border-[#f59e0b]/10 transition-all duration-1000 delay-150
+            ${phase === "enter" ? "scale-50 opacity-0" : "scale-100 opacity-100"}
+          `}
+          style={{ animation: phase !== "enter" ? "spinSlow 28s linear infinite reverse" : "none" }}
+        />
+        <div
+          className={`absolute w-[520px] h-[520px] sm:w-[680px] sm:h-[680px] rounded-full border border-white/5 transition-all duration-1000 delay-300
+            ${phase === "enter" ? "scale-50 opacity-0" : "scale-100 opacity-100"}
+          `}
+        />
+      </div>
 
+      {/* Glow orbs */}
       <div className="absolute inset-0 pointer-events-none">
-        {[...Array(30)].map((_, i) => (
+        <div className="absolute top-1/3 left-1/3 w-[300px] h-[300px] bg-[#f59e0b]/15 rounded-full blur-[100px] animate-pulse" />
+        <div className="absolute bottom-1/3 right-1/3 w-[250px] h-[250px] bg-[#f59e0b]/10 rounded-full blur-[90px] animate-pulse delay-1000" />
+      </div>
+
+      {/* Floating dots */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {[...Array(18)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-1 h-1 bg-[#4a7aaa]/30 rounded-full animate-float-slow"
+            className="absolute w-1 h-1 rounded-full bg-[#f59e0b]/40"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${5 + Math.random() * 10}s`
+              left: `${8 + (i * 5.2) % 84}%`,
+              top: `${12 + (i * 7.3) % 76}%`,
+              animation: `floatDot ${3 + (i % 4)}s ease-in-out infinite`,
+              animationDelay: `${(i % 5) * 0.35}s`,
             }}
           />
         ))}
       </div>
 
-      <div className="relative z-10 text-center px-4">
-        <div className="mb-8 relative inline-block">
-          <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-[#1a2a4a] to-[#2a4a7a] flex items-center justify-center text-5xl font-bold text-white shadow-2xl shadow-[#1a2a4a]/50 animate-[pulse_2s_ease-in-out_infinite]">
-            A
+      {/* Center content */}
+      <div
+        className={`relative z-10 flex flex-col items-center text-center px-6 transition-all duration-700
+          ${phase === "enter" ? "scale-90 opacity-0 translate-y-6" : "scale-100 opacity-100 translate-y-0"}
+        `}
+      >
+        {/* Logo */}
+        <div className="relative mb-8">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-[#f59e0b] to-[#d97706] flex items-center justify-center shadow-[0_0_40px_rgba(245,158,11,0.35)]">
+            <span className="text-2xl sm:text-3xl font-black text-black">AK</span>
           </div>
-          <div className="absolute -inset-4 bg-gradient-to-r from-[#4a7aaa]/20 to-[#6aaadd]/20 rounded-3xl blur-2xl animate-pulse" />
-          <div className="absolute -inset-8 bg-gradient-to-r from-[#4a7aaa]/10 to-[#6aaadd]/10 rounded-full blur-3xl animate-pulse delay-700" />
+          <div className="absolute -inset-2 rounded-3xl border border-[#f59e0b]/30 animate-ping opacity-50" />
         </div>
 
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight">
+        {/* Title typewriter */}
+        <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight min-h-[1.3em]">
           {fullText.substring(0, textIndex)}
-          <span className="inline-block w-0.5 h-8 sm:h-10 md:h-12 bg-[#4a7aaa] animate-pulse ml-1" />
+          {(phase === "type" || phase === "hold") && (
+            <span className="inline-block w-[3px] h-7 sm:h-9 bg-[#f59e0b] animate-pulse ml-1 align-middle rounded-full" />
+          )}
         </h1>
 
-        <div className="mt-4 h-8">
-          {showSubtext && (
+        {/* Role cycle */}
+        <div className="mt-4 h-7 flex items-center justify-center overflow-hidden">
+          {(phase === "type" || phase === "hold") && textIndex > 10 && (
             <p
-              id="subtext"
-              className="text-lg sm:text-xl text-[#8aaac8] font-medium animate-[fadeInUp_0.5s_ease-out]"
+              key={subIndex}
+              className="text-sm sm:text-base text-[#f59e0b] font-medium tracking-wide animate-[roleIn_0.4s_ease-out]"
             >
-              ✦ Full Stack Developer
+              {subTexts[subIndex]}
             </p>
           )}
         </div>
 
-        <div className="mt-8 w-48 sm:w-64 h-1 bg-[#1a2236] rounded-full overflow-hidden mx-auto">
-          <div className="h-full bg-gradient-to-r from-[#4a7aaa] to-[#6aaadd] rounded-full animate-[loadingBar_3s_ease-in-out_forwards]" />
+        {/* Progress ring style bar */}
+        <div className="mt-10 w-44 sm:w-56">
+          <div className="h-[2px] bg-[#1a1a1a] rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-[#f59e0b] via-[#fbbf24] to-[#f59e0b] rounded-full transition-all duration-75 ease-linear shadow-[0_0_12px_rgba(245,158,11,0.5)]"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <p className="mt-3 text-[9px] font-mono tracking-[0.25em] uppercase text-neutral-600">
+            Entering portfolio
+          </p>
         </div>
-
-        <p className="mt-4 text-[#6a8aaa] text-xs tracking-widest uppercase animate-pulse">
-          Loading Experience...
-        </p>
       </div>
+
+      <style>{`
+        @keyframes spinSlow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes floatDot {
+          0%, 100% { transform: translateY(0) scale(1); opacity: 0.35; }
+          50% { transform: translateY(-14px) scale(1.4); opacity: 0.8; }
+        }
+        @keyframes roleIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 };
