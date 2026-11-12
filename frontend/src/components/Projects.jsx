@@ -6,7 +6,7 @@ import AssistantImg from "../assets/Assistant.webp";
 import TaskFlowImg from "../assets/task.jpeg";
 
 const Projects = () => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [expandedId, setExpandedId] = useState(null);
   const [visibleCards, setVisibleCards] = useState([]);
   const [tilts, setTilts] = useState({});

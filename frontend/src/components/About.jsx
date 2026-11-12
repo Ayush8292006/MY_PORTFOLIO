@@ -34,7 +34,7 @@ const Icons = {
 
 // ==================== MAIN COMPONENT ====================
 const About = () => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [activeTab, setActiveTab] = useState("skills");
   const [typedOutput, setTypedOutput] = useState("");
   const [isTypingComplete, setIsTypingComplete] = useState(false);
@@ -45,7 +45,7 @@ const About = () => {
       ([entry]) => {
         if (entry.isIntersecting) setIsVisible(true);
       },
-      { threshold: 0.08 }
+      { threshold: 0.01, rootMargin: "300px 0px" }
     );
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();

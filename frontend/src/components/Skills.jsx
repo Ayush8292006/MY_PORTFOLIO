@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 const Skills = () => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [activeCategory, setActiveCategory] = useState("all");
   const [selectedSkill, setSelectedSkill] = useState(null);
   const [hoveredSkill, setHoveredSkill] = useState(null);

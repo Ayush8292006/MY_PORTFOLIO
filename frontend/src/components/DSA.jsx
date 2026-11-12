@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 const DSA = () => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [activeDomain, setActiveDomain] = useState("dp");
   const sectionRef = useRef(null);

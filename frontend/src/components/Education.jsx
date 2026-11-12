@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 const Education = () => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [tilts, setTilts] = useState({});
   const [hoveredId, setHoveredId] = useState(null);
   const sectionRef = useRef(null);

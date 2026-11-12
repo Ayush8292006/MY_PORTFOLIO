@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semaan — Create</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'Inter', system-ui, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Scroll area for animation */
+        .scroll-container {
+            height: 500vh;
+        }
+
+        /* Full-screen canvas background */
+        .canvas-wrapper {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            background: #000;
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Main overlay */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .overlay > * {
+            pointer-events: auto;
+        }
+
+        /* ========== TOP NAV ========== */
+        .top-nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 28px 48px;
+            z-index: 20;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -0.3px;
+        }
+
+        .logo-icon {
+            width: 28px;
+            height: 28px;
+            background: #fff;
+            color: #ff6b00;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            opacity: 0.95;
+            transition: opacity 0.2s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.7;
+        }
+
+        .menu-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        /* ========== LEFT CONTENT ========== */
+        .left-content {
+            position: absolute;
+            left: 48px;
+            top: 50%;
+            transform: translateY(-50%);
+            max-width: 520px;
+            z-index: 15;
+        }
+
+        .main-title {
+            font-size: clamp(72px, 11vw, 128px);
+            font-weight: 900;
+            line-height: 0.9;
+            letter-spacing: -4px;
+            color: #fff;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 30px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 1.5;
+            opacity: 0.95;
+            margin-bottom: 36px;
+            max-width: 300px;
+        }
+
+        .btn-view {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #fff;
+            color: #ff6b00;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 16px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .btn-view:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+        }
+
+        .trusted {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 48px;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .avatar-group {
+            display: flex;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2.5px solid #ff8a00;
+            margin-left: -12px;
+            background: #444;
+            object-fit: cover;
+        }
+
+        .avatar:first-child {
+            margin-left: 0;
+        }
+
+        .trusted-text {
+            max-width: 200px;
+            line-height: 1.4;
+        }
+
+        /* ========== RIGHT MOCKUP CARD ========== */
+        .mockup-card {
+            position: absolute;
+            right: 48px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 340px;
+            background: #fff;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.35);
+            color: #111;
+            z-index: 15;
+        }
+
+        .mockup-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 22px;
+            border-bottom: 1px solid #eee;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: #555;
+        }
+
+        .mockup-nav {
+            display: flex;
+            gap: 18px;
+        }
+
+        .mockup-body {
+            padding: 28px 24px 24px;
+        }
+
+        .available-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #ff6b00;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .available-label::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            background: #ff6b00;
+            border-radius: 50%;
+        }
+
+        .mockup-title {
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 28px;
+            color: #111;
+        }
+
+        .quote-card {
+            background: #f6f6f6;
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .quote-card::before {
+            content: "“";
+            position: absolute;
+            top: 12px;
+            left: 16px;
+            font-size: 32px;
+            color: #ff6b00;
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+
+        .quote-text {
+            font-size: 13.5px;
+            line-height: 1.55;
+            color: #444;
+            padding-left: 12px;
+            margin-bottom: 16px;
+        }
+
+        .quote-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-left: 12px;
+        }
+
+        .author-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff9f1a, #ff6b00);
+            flex-shrink: 0;
+        }
+
+        .author-info {
+            font-size: 13px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .author-info span {
+            display: block;
+            font-size: 11px;
+            font-weight: 500;
+            color: #888;
+            margin-top: 1px;
+        }
+
+        /* Loader */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #111;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 0.5s ease;
+        }
+
+        #loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .progress-bar {
+            width: 240px;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #ff8a00, #ff5e00);
+            transition: width 0.1s linear;
+        }
+
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .mockup-card {
+                width: 300px;
+                right: 24px;
+            }
+            .left-content {
+                left: 32px;
+            }
+            .top-nav {
+                padding: 20px 28px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .mockup-card {
+                display: none; /* hide mockup on smaller screens for cleanliness */
+            }
+            .left-content {
+                left: 24px;
+                right: 24px;
+                max-width: 100%;
+            }
+            .main-title {
+                font-size: 72px;
+            }
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loader -->
+    <div id="loader">
+        <div style="font-size: 17px; font-weight: 600; letter-spacing: 0.3px;">Loading experience…</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div id="progressText" style="margin-top: 12px; font-size: 13px; opacity: 0.5;">0 / 192</div>
+    </div>
+
+    <!-- Scroll height -->
+    <div class="scroll-container" id="scrollContainer"></div>
+
+    <!-- Canvas Background (Scroll Animation) -->
+    <div class="canvas-wrapper">
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <!-- UI Overlay -->
+    <div class="overlay">
+
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="logo">
+                <div class="logo-icon">S</div>
+                Semaan
+            </div>
+            <div class="nav-links">
+                <a href="#">WORK</a>
+                <a href="#">ABOUT</a>
+                <a href="#">SERVICES</a>
+                <a href="#">CONTACT</a>
+                <div class="menu-btn">☰</div>
+            </div>
+        </div>
+
+        <!-- Left Content -->
+        <div class="left-content">
+            <h1 class="main-title">CREATE</h1>
+            <p class="subtitle">
+                Designs that inspire.<br>
+                Ideas that connect.
+            </p>
+            <a href="#" class="btn-view">
+                VIEW WORK →
+            </a>
+
+            <div class="trusted">
+                <div class="avatar-group">
+                    <div class="avatar" style="background: #ff6b6b;"></div>
+                    <div class="avatar" style="background: #4ecdc4;"></div>
+                    <div class="avatar" style="background: #45b7d1;"></div>
+                    <div class="avatar" style="background: #96ceb4;"></div>
+                </div>
+                <div class="trusted-text">
+                    <strong>+12</strong> Trusted by forward-thinking brands worldwide
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Mockup Card -->
+        <div class="mockup-card">
+            <div class="mockup-top">
+                <div class="mockup-nav">
+                    <span>WORK</span>
+                    <span>ABOUT</span>
+                    <span>SERVICES</span>
+                    <span>CONTACT</span>
+                </div>
+                <div style="font-size: 16px;">☰</div>
+            </div>
+            <div class="mockup-body">
+                <div class="available-label">AVAILABLE FOR</div>
+                <div class="mockup-title">Freelance<br>Projects</div>
+
+                <div class="quote-card">
+                    <div class="quote-text">
+                        Always delivered outstanding work that exceeded our expectations.
+                    </div>
+                    <div class="quote-author">
+                        <div class="author-avatar"></div>
+                        <div class="author-info">
+                            JAMES CARTER
+                            <span>Product Lead</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const TOTAL_FRAMES = 192;
+        const FRAME_PATH = (i) => `frame_${String(i).padStart(6, '0')}.jpg`;
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const scrollContainer = document.getElementById('scrollContainer');
+        const loader = document.getElementById('loader');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+
+        const images = new Array(TOTAL_FRAMES);
+        let loadedCount = 0;
+        let currentFrame = -1;
+
+        function preloadImages() {
+            return new Promise((resolve) => {
+                for (let i = 0; i < TOTAL_FRAMES; i++) {
+                    const img = new Image();
+                    img.src = FRAME_PATH(i);
+
+                    img.onload = async () => {
+                        try { await img.decode(); } catch (e) {}
+                        loadedCount++;
+                        updateProgress();
+                        if (loadedCount === TOTAL_FRAMES) resolve();
+                    };
+
+                    img.onerror = () => {
+                        loadedCount++;
+                        updateProgress();
+                        if (loadedCount === TOTAL_FRAMES) resolve();
+                    };
+
+                    images[i] = img;
+                }
+            });
+        }
+
+        function updateProgress() {
+            const percent = Math.round((loadedCount / TOTAL_FRAMES) * 100);
+            progressFill.style.width = percent + '%';
+            progressText.textContent = `${loadedCount} / ${TOTAL_FRAMES}`;
+        }
+
+        function drawFrame(index) {
+            const img = images[index];
+            if (!img || !img.complete) return;
+
+            const dpr = window.devicePixelRatio || 1;
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+
+            canvas.width = w * dpr;
+            canvas.height = h * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+            // Full cover
+            const canvasRatio = w / h;
+            const imgRatio = img.naturalWidth / img.naturalHeight;
+
+            let drawWidth, drawHeight, offsetX, offsetY;
+
+            if (imgRatio > canvasRatio) {
+                drawHeight = h;
+                drawWidth = img.naturalWidth * (drawHeight / img.naturalHeight);
+                offsetX = (w - drawWidth) / 2;
+                offsetY = 0;
+            } else {
+                drawWidth = w;
+                drawHeight = img.naturalHeight * (drawWidth / img.naturalWidth);
+                offsetX = 0;
+                offsetY = (h - drawHeight) / 2;
+            }
+
+            ctx.clearRect(0, 0, w, h);
+            ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+        }
+
+        function updateFrame() {
+            const scrollY = window.scrollY;
+            const maxScroll = scrollContainer.scrollHeight - window.innerHeight;
+            const progress = Math.min(Math.max(scrollY / maxScroll, 0), 1);
+            const frameIndex = Math.round(progress * (TOTAL_FRAMES - 1));
+
+            if (frameIndex !== currentFrame) {
+                currentFrame = frameIndex;
+                drawFrame(frameIndex);
+            }
+        }
+
+        let ticking = false;
+        function onScroll() {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    updateFrame();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }
+
+        // Init
+        preloadImages().then(() => {
+            drawFrame(0);
+            currentFrame = 0;
+            loader.classList.add('hidden');
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', () => drawFrame(currentFrame), { passive: true });
+            updateFrame();
+        });
+    </script>
+</body>
+</html>
